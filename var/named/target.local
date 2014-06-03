@@ -1,0 +1,12 @@
+$TTL 3600
+@	IN SOA	target.local. hostmaster.target.local. (
+					2014053001 ; serial
+					1D	; refresh
+					1H	; retry
+					1W	; expire
+					3H )	; minimum
+		NS	ns.target.local.
+		A	172.16.0.2
+ns		A	172.16.0.2
+fw01		A	172.16.0.2
+client01	A	172.16.0.20

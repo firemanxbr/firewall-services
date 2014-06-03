@@ -1,0 +1,59 @@
+# Table NAT
+*nat
+:PREROUTING ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+
+# set this system as router for rest of LAN
+--append POSTROUTING --out-interface eth0 -j MASQUERADE 
+
+# DNAT port 80 request comming from LAN systems to squid 3128 (TransparentProxy)
+-A PREROUTING -i eth1 -p tcp --dport 80 -j DNAT --to 172.16.0.2:3128
+-A PREROUTING -i eth1 -p tcp --dport 443 -j DNAT --to 172.16.0.2:3128
+COMMIT
+
+# Table FILTER
+*filter
+:INPUT ACCEPT [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [3329:139011]
+
+# Setting default filter policy
+-P INPUT DROP
+-P OUTPUT ACCEPT
+
+# set this system as router for rest of LAN
+--append FORWARD --in-interface eth1 -j ACCEPT
+
+# Unlimited access to LAN
+-A FORWARD -i eth1 -j ACCEPT
+-A FORWARD -o eth1 -j ACCEPT
+
+# Allow UDP, DNS and Passive FTP
+-A INPUT -i eth0 -m state --state ESTABLISHED,RELATED -j ACCEPT
+-A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT 
+
+# Permit packages ping
+-A INPUT -p icmp -j ACCEPT 
+
+# Unlimited access to loop back
+-A INPUT -i lo -j ACCEPT 
+-A OUTPUT -o lo -j ACCEPT
+
+# DNS Server 
+-A INPUT -p udp -m state --state NEW -m udp --dport 53 -j ACCEPT 
+
+# NTP Server
+-A INPUT -p udp -m state --state NEW -m udp --dport 123 -j ACCEPT 
+
+# SQUID Server
+-A INPUT -p tcp -m state --state NEW -m tcp --dport 3128 -j ACCEPT 
+
+# Block https sites
+-I FORWARD -m string --algo bm --string "facebook.com" -j DROP
+-I OUTPUT -m string --algo bm --string "facebook.com" -j DROP
+
+# DROP everything and Log it
+-A INPUT -j LOG
+-A INPUT -j DROP
+COMMIT
