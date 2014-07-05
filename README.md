@@ -12,6 +12,7 @@ NTPD Service
 NAMED Service
 -------------
 /etc/named.conf (main config)
+
 /var/named/target.local (zone template)
 
 
