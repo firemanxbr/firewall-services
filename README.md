@@ -4,26 +4,27 @@ firewall-services
 examples to firewall services:
 
 
-NTPD Service:
-
+NTPD Service
+------------
 /etc/ntp.conf
 
 
-
-NAMED Service:
-
+NAMED Service
+-------------
 /etc/named.conf (main config)
-
 /var/named/target.local (zone template)
 
 
-
-DHCPD Service:
-
+DHCPD Service
+-------------
 /etc/dhcp/dhcpd.conf
 
 
-
-IPTABLES Service:
-
+IPTABLES Service
+----------------
 /etc/syconfig/iptables
+
+
+SQUID Service
+-------------
+/etc/squid/squid.conf
