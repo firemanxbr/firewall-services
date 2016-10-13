@@ -1,7 +1,7 @@
 firewall-services
 =================
 
-examples to firewall services:
+examples of firewall services:
 
 
 NTPD Service
